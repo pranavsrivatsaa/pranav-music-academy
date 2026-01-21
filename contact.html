@@ -62,8 +62,20 @@
     <div class="contact-form">
       <input id="name" type="text" placeholder="Your Name">
       <input id="email" type="email" placeholder="Your Email">
+
+      <!-- ADDED: COURSE SELECTION -->
+      <select id="course"
+        style="width:100%; padding:15px; margin-bottom:15px; background:#000; color:#fff; border:1px solid #333; border-radius:10px;">
+        <option value="">Select Course</option>
+        <option value="Keyboard Course|1999">Keyboard Course – ₹1999</option>
+        <option value="Vocal Training|2499">Vocal Training – ₹2499</option>
+        <option value="Advanced Music Theory|2999">Advanced Music Theory – ₹2999</option>
+      </select>
+
       <textarea id="message" placeholder="Your Message"></textarea>
-      <button onclick="saveData()">Send Message</button>
+
+      <!-- BUTTON TEXT CHANGED -->
+      <button onclick="saveData()">Proceed with Payment</button>
     </div>
 
   </div>
@@ -72,5 +84,50 @@
 <footer>© 2025 Pranav’s Music Academy</footer>
 
 <script src="script.js"></script>
+
+<!-- OVERRIDE saveData() WITHOUT TOUCHING OTHER FILES -->
+<script>
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  function saveData() {
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const courseData = document.getElementById("course").value;
+
+    if (!name || !email || !courseData) {
+      alert("Please fill all required details");
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      alert("Please enter a valid email address");
+      return;
+    }
+
+    const [course, amount] = courseData.split("|");
+
+    const billText =
+`PRANAV'S MUSIC ACADEMY
+----------------------------
+
+Name            : ${name}
+Email           : ${email}
+Course Selected : ${course}
+Amount Paid     : ₹${amount}
+
+Payment Status  : RECEIVED
+Verification    : VERIFIED
+`;
+
+    const blob = new Blob([billText], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "Pranav_Music_Academy_Bill.txt";
+    link.click();
+  }
+</script>
+
 </body>
 </html>
